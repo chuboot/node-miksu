@@ -1,14 +1,33 @@
+const PORT = 8000;
+const express = require("express");
 const clientRosRest = require("./config/router.js");
 
-clientRosRest
-  .print("ip/dhcp-server/lease")
-  .then((res) => {
-    const restdata = res.data;
-    restdata.forEach((resdt) => {
-      // console.log(`IP:${resdt.address} MAC:${resdt["mac-address"]} DEVICE: ${resdt["host-name"]}`);
-      console.log(restdata);
+const app = express();
+
+app.get("/", (req, res) => {
+  res.json("Welcome to my miksu web!");
+});
+app.get("/dhcp", (req, res) => {
+  clientRosRest
+    .print("ip/dhcp-server/lease")
+    .then((resp) => {
+      const restdata = resp.data;
+      res.json(restdata);
+    })
+    .catch((err) => {
+      console.log("error:", err);
     });
-  })
-  .catch((err) => {
-    console.log("error:", err);
-  });
+});
+app.get("/address-list", (req, res) => {
+  clientRosRest
+    .print("/ip/firewall/address-list")
+    .then((resp) => {
+      const restdata = resp.data;
+      res.json(restdata);
+    })
+    .catch((err) => {
+      console.log("error:", err);
+    });
+});
+
+app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`));
