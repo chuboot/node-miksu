@@ -1,0 +1,12 @@
+GET http://localhost:8000/address-list
+
+###
+POST http://localhost:8000/address-list
+Content-Type: application/json
+
+{
+    "address": "192.168.201.21",
+    "list": "internet-allow"
+}
+
+
